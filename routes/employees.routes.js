@@ -37,22 +37,22 @@ router.get('/employees/:id', async (req, res) => {
 
 router.post('/employees', async (req, res) => {
   try {
-    const { name } = req.body;
-    const newEmployee = new Employee({ name: name });
+    const { firstName, lastName, department } = req.body;
+    const newEmployee = new Employee({ firstName: firstName, lastName: lastName, department: department });
     await newEmployee.save();
-    res.json({ message: 'OK' });
+    res.status(200).json(newEmployee);
   } catch(err) {
     res.status(500).json({ message: err });
   }
 });
 
 router.put('/employees/:id', async (req, res) => {
-  const { name } = req.body;
+  const { firstName, lastName, department } = req.body;
   try {
     const empl = await Employee.findById(req.params.id);
     if(empl) {
-      await Employee.updateOne({ _id: req.params.id }, { $set: { name: name }});
-      res.json({ message: 'OK' });
+      await Employee.updateOne({ _id: req.params.id }, { $set: { firstName: firstName, lastName: lastName, department: department }});
+      res.status(200).json(empl);
     }
     else res.status(404).json({ message: 'Not found...' });
   }
@@ -66,7 +66,7 @@ router.delete('/employees/:id', async (req, res) => {
     const empl = await Employee.findById(req.params.id);
     if(empl) {
       await Employee.deleteOne({ _id: req.params.id });
-      res.json({ message: 'OK' });
+      res.status(200).json(empl);
     }
     else res.status(404).json({ message: 'Not found...' });
   }
